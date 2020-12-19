@@ -1,14 +1,16 @@
 package ru.kpfu.itis.models;
 
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
+import ru.kpfu.itis.helpers.CellTexture;
+import ru.kpfu.itis.helpers.CellTextureAdder;
 
 import java.util.ArrayList;
 
 @Getter
 public class BattleField {
+    // true если поле игрока, false - поле противника
     private Boolean isYourselfBattleField;
     private ArrayList<Ship> shipsOnField;
     private GridPane gridPane;
@@ -21,48 +23,34 @@ public class BattleField {
 
     private void renderField(AnchorPane anchorPane, Double xForField, Double yForField, Double heightOfField, Double widthOfField) {
         this.gridPane = new GridPane();
-
         //задание размеров gridPane
         gridPane.setPrefHeight(heightOfField);
         gridPane.setPrefWidth(widthOfField);
 
+        CellTextureAdder textureAdder = new CellTextureAdder(gridPane);
+
         for (int i = 0; i < CELLSNUM; i++) {
             for (int j = 0; j < CELLSNUM; j++) {
-                //создание кнопки без текста с картинкой
-                //далее именнуемой "клетка"
-                ImageView cellTexture = new ImageView("/img/water.png");
-
                 //размеры клетки
-                cellTexture.setFitHeight(30.0);
-                cellTexture.setFitWidth(30.0);
+                Double textureHeight = 30.0;
+                Double textureWidth = 30.0;
+
+                //создание клетки с текстурой
+                CellTexture seaCellTexture = new CellTexture("/img/water.png", textureHeight, textureWidth);
 
                 //добавление клетки в (i, j) ячейку сетки
-                GridPane.setConstraints(cellTexture, i, j);
+                textureAdder.addTextureOnGridPane(seaCellTexture, i, j);
 
-                cellTexture.setOnMouseClicked(event -> {
-                    //вывод координаты при нажатии на клетку
-//                    label.setText("(" + GridPane.getColumnIndex(cellTexture) + ", " + GridPane.getRowIndex(cellTexture) + ")");
-
+                seaCellTexture.setOnMouseClicked(event -> {
                     //новая клетка с другой картинкой
-                    ImageView cellTextureAfterClick = new ImageView("/img/water_dark.png");
-
-                    //размеры клетки
-                    cellTextureAfterClick.setFitHeight(30.0);
-                    cellTextureAfterClick.setFitWidth(30.0);
+                    CellTexture afterClickCellTexture = new CellTexture("/img/water_dark.png", textureHeight, textureWidth);
 
                     //старые координаты клетки
-                    Integer cellX = GridPane.getColumnIndex(cellTexture);
-                    Integer cellY = GridPane.getRowIndex(cellTexture);
+                    Integer cellX = seaCellTexture.getCellX();
+                    Integer cellY = seaCellTexture.getCellY();
 
-                    //удаление старой клетки
-                    GridPane.clearConstraints(cellTexture);
-
-                    //добавление новой клетки
-                    GridPane.setConstraints(cellTextureAfterClick, cellX, cellY);
-                    gridPane.getChildren().add(cellTextureAfterClick);
+                    textureAdder.addTextureOnGridPane(afterClickCellTexture, cellX, cellY);
                 });
-
-                gridPane.getChildren().add(cellTexture);
             }
         }
         //добавление gridPane на anchorPane
