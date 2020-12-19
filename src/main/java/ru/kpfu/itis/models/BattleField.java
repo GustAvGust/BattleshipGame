@@ -27,7 +27,7 @@ public class BattleField {
         gridPane.setPrefHeight(heightOfField);
         gridPane.setPrefWidth(widthOfField);
 
-        CellTextureAdder textureAdder = new CellTextureAdder(gridPane);
+        CellTextureAdder cellTextureAdder = new CellTextureAdder(gridPane);
 
         for (int i = 0; i < CELLSNUM; i++) {
             for (int j = 0; j < CELLSNUM; j++) {
@@ -39,7 +39,7 @@ public class BattleField {
                 CellTexture seaCellTexture = new CellTexture("/img/water.png", textureHeight, textureWidth);
 
                 //добавление клетки в (i, j) ячейку сетки
-                textureAdder.addTextureOnGridPane(seaCellTexture, i, j);
+                cellTextureAdder.addTextureOnGridPane(seaCellTexture, i, j);
 
                 seaCellTexture.setOnMouseClicked(event -> {
                     //новая клетка с другой картинкой
@@ -49,7 +49,7 @@ public class BattleField {
                     Integer cellX = seaCellTexture.getCellX();
                     Integer cellY = seaCellTexture.getCellY();
 
-                    textureAdder.addTextureOnGridPane(afterClickCellTexture, cellX, cellY);
+                    cellTextureAdder.addTextureOnGridPane(afterClickCellTexture, cellX, cellY);
                 });
             }
         }
